@@ -25,16 +25,9 @@ class BaseHandler(webapp2.RequestHandler):
 
 class PageHandler(BaseHandler):
     def root(self):
-        now = datetime.datetime.now()
-        ten_min_ago = now - datetime.timedelta(minutes=10)
-        context = {
-            'now': now,
-            'ten_min_ago': ten_min_ago
-        }
-        return self.render_template('pages_test_filters.html', context)
+        context = {'site': 'root site'}
+        return self.render_template('home.html', context)
 
-    def test_string(self):
-        context = {
-            'now': datetime.datetime.now(),
-        }
-        return self.render_string('Now is {{ now|datetimeformat }}', context)
+    def subdomain(self):
+        context = {'site': 'subdomain_site'}
+        return self.render_template('home.html', context)

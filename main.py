@@ -18,25 +18,27 @@
 import os
 import filters
 import webapp2
+import config
 from webapp2 import Route
+from webapp2_extras.routes import DomainRoute
 
 
 DEBUG = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
 routes = [
+    # handle specific subdomain/hostname
+    DomainRoute(config.subdomain_hostname, [
+        Route('/', handler='handlers.PageHandler:subdomain', name='pages-subdomain'),
+    ]),
+
+    # handle other hostnames and domains
     Route('/', handler='handlers.PageHandler:root', name='pages-root'),
-    Route('/test-string', handler='handlers.PageHandler:test_string', name='pages-test-string'),
-    ]
+]
 
 config = {
     'webapp2_extras.jinja2': {
         'template_path': 'template_files',
-        'filters': {
-            'timesince': filters.timesince,
-            'datetimeformat': filters.datetimeformat,
-        },
     },
 }
-
 
 application = webapp2.WSGIApplication(routes, debug=DEBUG, config=config)
